@@ -22,7 +22,10 @@ import {
   MessageCircle,
   Eye,
   TrendingUp,
-  Loader2
+  Loader2,
+  Heart,
+  Bookmark,
+  Share2
 } from 'lucide-react';
 
 // URL Google Apps Script (Đảm bảo đã deploy phiên bản mới nhất)
@@ -317,39 +320,58 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Proof Section */}
+      {/* Proof Section - UPDATED WITH NEW STATS */}
       <section className="py-32 bg-slate-900 text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="space-y-12">
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-gold/10 border border-gold/30 text-gold font-bold text-xs uppercase tracking-widest">
+              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-gold/40 text-gold font-bold text-xs uppercase tracking-widest bg-gold/5">
                 <TrendingUp className="w-4 h-4" /> Minh chứng sức hút thực tế
               </div>
               <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter leading-tight uppercase">
                 Hơn <span className="text-gold">300 anh em</span> môi giới đã săn đón
               </h2>
               
-              <div className="grid grid-cols-2 gap-6 pt-4">
+              <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="bg-white/5 border border-white/10 p-6 rounded-3xl text-left hover:bg-white/10 transition-colors">
-                  <Eye className="w-8 h-8 text-gold mb-4" />
-                  <p className="text-4xl font-bold text-white">150K+</p>
-                  <p className="text-[10px] uppercase text-slate-500 font-semibold tracking-[0.2em] mt-2">Lượt xem thực tế</p>
+                  <Eye className="w-6 h-6 text-gold mb-3" />
+                  <p className="text-3xl font-bold text-white">150K+</p>
+                  <p className="text-[10px] uppercase text-slate-500 font-bold tracking-[0.2em] mt-1">Lượt xem thực tế</p>
                 </div>
                 <div className="bg-white/5 border border-white/10 p-6 rounded-3xl text-left hover:bg-white/10 transition-colors">
-                  <MessageCircle className="w-8 h-8 text-green-500 mb-4" />
-                  <p className="text-4xl font-bold text-white">300+</p>
-                  <p className="text-[10px] uppercase text-slate-500 font-semibold tracking-[0.2em] mt-2">Người xin tài liệu</p>
+                  <MessageCircle className="w-6 h-6 text-green-500 mb-3" />
+                  <p className="text-3xl font-bold text-white">300+</p>
+                  <p className="text-[10px] uppercase text-slate-500 font-bold tracking-[0.2em] mt-1">Người xin tài liệu</p>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-6 rounded-3xl text-left hover:bg-white/10 transition-colors">
+                  <Heart className="w-6 h-6 text-red-500 mb-3" />
+                  <p className="text-3xl font-bold text-white">4.337</p>
+                  <p className="text-[10px] uppercase text-slate-500 font-bold tracking-[0.2em] mt-1">Lượt yêu thích</p>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-6 rounded-3xl text-left hover:bg-white/10 transition-colors">
+                  <Bookmark className="w-6 h-6 text-blue-500 mb-3" />
+                  <p className="text-3xl font-bold text-white">1.430</p>
+                  <p className="text-[10px] uppercase text-slate-500 font-bold tracking-[0.2em] mt-1">Lượt lưu video</p>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-6 rounded-3xl text-left hover:bg-white/10 transition-colors col-span-2">
+                  <div className="flex items-center gap-4">
+                    <Share2 className="w-6 h-6 text-white/50" />
+                    <div>
+                      <p className="text-2xl font-bold text-white">506</p>
+                      <p className="text-[10px] uppercase text-slate-500 font-bold tracking-[0.2em]">Lượt chia sẻ bài viết</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             
             <div className="flex justify-center">
-               <div className="relative group max-w-[400px]">
-                  <div className="relative rounded-[3.5rem] border-[14px] border-slate-800 shadow-2xl overflow-hidden bg-slate-900 group-hover:scale-[1.02] transition-transform duration-1000">
+               <div className="relative group max-w-[420px]">
+                  <div className="relative rounded-[4rem] border-[12px] border-slate-800 shadow-2xl overflow-hidden bg-slate-900 transform lg:rotate-2 group-hover:rotate-0 transition-transform duration-1000">
                     <img 
                       src={PROOF_IMG_URL} 
-                      alt="Minh chứng TikTok" 
+                      alt="Minh chứng thực tế TikTok" 
                       className="w-full h-auto object-cover"
                       loading="lazy"
                     />
