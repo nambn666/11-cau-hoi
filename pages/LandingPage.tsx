@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 
 // URL Google Apps Script (Đảm bảo đã deploy phiên bản mới nhất)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTEgB4xcZbfrLQCFaRi9A_cAuhg_SQ-rIkfokzRZA0vzVf1JV83Ak6igLinUWKQhEy/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9vjk2vjOxclVEky0gbnYVjN57tVgFcMs7aA9_PzmK6epurRqwGtF0_XaVqaIA-2eo/exec";
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
