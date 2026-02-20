@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   CheckCircle2, 
@@ -28,8 +28,17 @@ import {
   Share2
 } from 'lucide-react';
 
-// URL Google Apps Script (Đảm bảo đã deploy phiên bản mới nhất)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9vjk2vjOxclVEky0gbnYVjN57tVgFcMs7aA9_PzmK6epurRqwGtF0_XaVqaIA-2eo/exec";
+/**
+ * CẤU HÌNH KẾT NỐI (Bạn chỉ cần thay đổi tại đây)
+ */
+const CONFIG = {
+  // URL Web App từ Google Apps Script của bạn
+  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwHWqad8Jzqa8K3HJ6YrAQbUz-RGQxxUFdxXX3zCZazmeNzabxEGge3tLbfSylQTtutyw/exec",
+  // ID của form trong Mautic
+  MAUTIC_FORM_ID: "2",
+  // Tag để phân loại khách hàng trong Mautic (ví dụ: lead-11-cau-hoi)
+  MAUTIC_LEAD_SOURCE: "LP_11_CAU_HOI_BDS"
+};
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -65,31 +74,31 @@ const LandingPage: React.FC = () => {
   const testimonials = [
     {
       name: "Anh Quang",
-      role: "Môi giới Ocean Park",
-      content: "Bộ câu hỏi thực sự rất tinh tế. Tôi đã áp dụng ngay vào cuộc gọi sáng nay và khách hàng chia sẻ rất nhiều về tài chính - điều mà trước đây tôi rất ngại hỏi.",
-      avatar: "https://i.postimg.cc/KY2RG5Mx/217553126_2044978578983660_718762978980990897_n.jpg"
+      role: "Môi giới Vinhomes Ocean Park",
+      content: "Bộ câu hỏi thực sự rất tinh tế. Tôi áp dụng ngay vào cuộc gọi sáng nay và khách hàng chia sẻ rất nhiều về tài chính - điều mà trước đây tôi thường rất ngại hỏi.",
+      avatar: TRUST_PHOTOS[0]
     },
     {
       name: "Anh Tuân",
-      role: "Chuyên viên Chung cư",
-      content: "Tài liệu nhỏ gọn nhưng võ công cao. Cách Nam hướng dẫn hỏi về khu vực quan tâm giúp tôi lọc được khách nét cực nhanh, đỡ mất công dẫn đi xem linh tinh.",
-      avatar: "https://i.postimg.cc/5tV64mCv/600394147_1226128239412780_5762387967117193079_n.jpg"
+      role: "Chuyên viên Thổ cư Hà Nội",
+      content: "Cách Nam hướng dẫn hỏi về khu vực giúp tôi lọc được khách nét cực nhanh. Tài liệu nhỏ gọn nhưng 'võ công' rất cao, anh em nên tải về ngay.",
+      avatar: TRUST_PHOTOS[1]
     },
     {
       name: "Chị My",
-      role: "Môi giới đất nền",
+      role: "Môi giới Đất nền Tỉnh",
       content: "Cảm ơn Nam nhé. Video TikTok đã hay rồi, tài liệu PDF này còn chi tiết hơn. Đã in ra dán ngay bàn làm việc để luyện tập hàng ngày.",
-      avatar: "https://i.postimg.cc/QM3H8qT9/606894250_122183162888527916_6301686403838280563_n.jpg"
+      avatar: TRUST_PHOTOS[2]
     }
   ];
 
   const benefits = [
     { title: "Khai thác mục đích thật", desc: "Xác định nhanh khách mua để ở, đầu tư lãi vốn hay kinh doanh dòng tiền.", icon: <Target className="w-5 h-5" /> },
-    { title: "Hỏi về tài chính tinh tế", desc: "Cách hỏi khéo léo về tiền mặt hay vay ngân hàng mà khách không cảm thấy bị soi xét.", icon: <Wallet className="w-5 h-5" /> },
-    { title: "Nắm bắt khu vực quan tâm", desc: "Kỹ thuật hỏi để biết khách đang nghiên cứu vùng nào (Hà Nội, Bắc Ninh hay tỉnh khác).", icon: <MapPin className="w-5 h-5" /> },
-    { title: "Chốt tiêu chí chi tiết", desc: "Nắm rõ các yêu cầu của khách hàng như: pháp lý, hướng nhà và các tiện ích ưu tiên.", icon: <ClipboardCheck className="w-5 h-5" /> },
-    { title: "Thiết kế để 'Thực chiến'", desc: "Tài liệu nhỏ gọn, có thể in ra dán tại bàn làm việc hoặc cài làm hình nền máy tính.", icon: <ZapIcon className="w-5 h-5" /> },
-    { title: "Rút ngắn lộ trình chốt cọc", desc: "Tư vấn đúng nhu cầu ngay từ cuộc gọi đầu tiên, tránh việc dẫn khách đi xem lan man.", icon: <FastForward className="w-5 h-5" /> }
+    { title: "Hỏi về tài chính tinh tế", desc: "Cách hỏi khéo léo về tiền mặt hay vay ngân hàng mà không làm khách khó chịu.", icon: <Wallet className="w-5 h-5" /> },
+    { title: "Nắm bắt khu vực quan tâm", desc: "Kỹ thuật hỏi để biết khách đang nghiên cứu vùng nào một cách tự nhiên nhất.", icon: <MapPin className="w-5 h-5" /> },
+    { title: "Chốt tiêu chí chi tiết", desc: "Nắm rõ các yêu cầu về pháp lý, hướng nhà và các tiện ích ưu tiên của khách.", icon: <ClipboardCheck className="w-5 h-5" /> },
+    { title: "Thiết kế thực chiến", desc: "Tài liệu trình bày khoa học, dễ dàng in ra hoặc cài làm hình nền máy tính.", icon: <ZapIcon className="w-5 h-5" /> },
+    { title: "Rút ngắn lộ trình chốt", desc: "Tư vấn đúng nhu cầu ngay từ cuộc gọi đầu tiên, tránh dẫn khách đi xem lan man.", icon: <FastForward className="w-5 h-5" /> }
   ];
 
   useEffect(() => {
@@ -120,27 +129,31 @@ const LandingPage: React.FC = () => {
 
     try {
       const params = new URLSearchParams();
-      params.append('name', formData.name.trim());
-      params.append('email', formData.email.trim().toLowerCase());
-      params.append('source', 'Landing Page 11 Cau Hoi');
+      // Mautic form fields are usually prefixed with "mauticform["
+      params.append('mauticform[firstname]', formData.name.trim()); 
+      params.append('mauticform[email]', formData.email.trim().toLowerCase());
+      params.append('mauticform[source]', CONFIG.MAUTIC_LEAD_SOURCE);
+      params.append('mauticform[formId]', CONFIG.MAUTIC_FORM_ID);
+      params.append('mauticform[return]', '');
+      params.append('mauticform[formName]', 'form_name_here'); // Optional but good practice if you know it
 
-      // Chế độ no-cors để tránh lỗi cross-origin trên browser
-      fetch(GOOGLE_SCRIPT_URL, {
+      // Gửi sang Google Script Proxy (Không dùng await để tối ưu cảm nhận tốc độ)
+      fetch(CONFIG.GOOGLE_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: params.toString(),
       });
 
-      // Tạo độ trễ cảm nhận để người dùng thấy hệ thống đang xử lý chuyên nghiệp
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Tạo trải nghiệm loading chuyên nghiệp
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       setLoading(false);
       navigate('/thank-you');
     } catch (error) {
-      console.error("Lỗi gửi dữ liệu:", error);
+      console.error("Lỗi đồng bộ Mautic:", error);
       setLoading(false);
-      navigate('/thank-you'); // Vẫn chuyển trang để không làm đứt mạch trải nghiệm
+      navigate('/thank-you'); 
     }
   };
 
@@ -165,7 +178,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img src={AVATAR_URL} alt="Nguyễn Nam" className="w-9 h-9 rounded-full border border-gray-200 object-cover" loading="eager" />
-            <span className="font-extrabold text-sm tracking-tighter uppercase text-slate-800">Nguyễn Nam BĐS</span>
+            <span className="font-extrabold text-sm tracking-tight uppercase text-slate-800">Nguyễn Nam BĐS</span>
           </div>
           <button 
             onClick={scrollToForm}
@@ -277,7 +290,7 @@ const LandingPage: React.FC = () => {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-6 h-6 animate-spin" /> ĐANG XỬ LÝ...
+                    <Loader2 className="w-6 h-6 animate-spin" /> ĐANG ĐỒNG BỘ...
                   </>
                 ) : (
                   <>
@@ -320,7 +333,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Proof Section - UPDATED WITH NEW STATS */}
+      {/* Proof Section */}
       <section className="py-32 bg-slate-900 text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-2 gold-gradient"></div>
         <div className="max-w-7xl mx-auto px-6">
@@ -382,10 +395,10 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials - SOCIAL PROOF CỰC MẠNH */}
       <section className="py-32 bg-cream overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 text-center mb-24 space-y-6">
-          <h2 className="text-4xl md:text-5xl font-extrabold italic tracking-tighter uppercase text-slate-900 underline underline-offset-8 decoration-gold decoration-4">Tiếng nói cộng đồng</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold italic tracking-tighter uppercase text-slate-900 underline underline-offset-8 decoration-gold decoration-4">Đồng nghiệp nói gì?</h2>
         </div>
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
           {testimonials.map((t, idx) => (
@@ -402,73 +415,27 @@ const LandingPage: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <p className="text-slate-700 leading-relaxed italic text-xl text-left font-medium opacity-90">"{t.content}"</p>
+              <p className="text-slate-600 text-lg leading-relaxed italic">"{t.content}"</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* About */}
-      <section className="py-32 bg-white border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-24 items-center">
-          <div className="relative">
-            <div className="relative rounded-[4rem] overflow-hidden shadow-2rem border-[16px] border-white group">
-              <img src={AVATAR_URL} alt="Nguyễn Nam" className="w-full h-full object-cover aspect-[4/5] transition-transform duration-[2s] group-hover:scale-110" loading="lazy" />
-              <div className="absolute bottom-0 left-0 w-full p-12 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent">
-                <p className="text-white font-bold text-4xl tracking-tight">Nguyễn Nam BĐS</p>
-                <p className="text-gold font-bold text-xl tracking-[0.2em] uppercase mt-3">Chuyên gia Môi giới Thực chiến</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="space-y-12">
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-slate-900 leading-none">Về Nguyễn Nam</h2>
-            <div className="space-y-10 text-2xl text-slate-600 leading-relaxed italic font-medium">
-              <p>"Chào bạn, tôi là Nguyễn Nam. Với hơn 4 năm thực chiến trong lĩnh vực bất động sản, tôi thấu hiểu những khó khăn mà anh em môi giới gặp phải khi tiếp cận khách hàng mới."</p>
-              <p>"Sứ mệnh của tôi là giúp bạn chuyển từ một 'người đi chào hàng' thành một 'chuyên gia tư vấn' thực thụ."</p>
-            </div>
-
-            <div className="flex gap-8 pt-6">
-                <a href="https://www.facebook.com/namtuyendungbds/" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-cream flex items-center justify-center text-slate-400 hover:text-gold hover:-translate-y-2 transition-all border-2 border-slate-50">
-                    <Facebook className="w-8 h-8" />
-                </a>
-                <a href="https://www.youtube.com/channel/UCyX8IefNC42CONw7QAaVl7w" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-cream flex items-center justify-center text-slate-400 hover:text-gold hover:-translate-y-2 transition-all border-2 border-slate-50">
-                    <Youtube className="w-8 h-8" />
-                </a>
-                <a href="https://www.tiktok.com/@namtuyendung" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-cream flex items-center justify-center text-slate-400 hover:text-gold hover:-translate-y-2 transition-all border-2 border-slate-50">
-                    <TikTokIcon />
-                </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="py-32 bg-cream">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-4xl font-extrabold text-center mb-20 text-slate-900 tracking-tighter uppercase">Giải đáp thắc mắc</h2>
-          <div className="space-y-6">
-            {[
-              { q: "Tài liệu này có mẫu câu hỏi cụ thể không?", a: "Có. Nam cung cấp 11 mẫu câu hỏi thực tế giúp bạn bắt chuyện và khai thác thông tin khách hàng cực kỳ tự nhiên." },
-              { q: "Tôi có thể in tài liệu này ra không?", a: "Hoàn toàn được. Tài liệu được thiết kế tối ưu để bạn in ra dán ngay tại bàn làm việc." },
-              { q: "Tôi nhận PDF bằng cách nào?", a: "Hệ thống sẽ gửi link tải PDF trực tiếp vào email của bạn ngay sau khi đăng ký thành công." }
-            ].map((faq, idx) => (
-              <details key={idx} className="group bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
-                <summary className="list-none p-8 cursor-pointer flex justify-between items-center font-bold text-lg text-slate-800 uppercase tracking-tight">
-                  {faq.q} <ChevronDown className="w-6 h-6 group-open:rotate-180 transition-transform text-gold duration-500" />
-                </summary>
-                <div className="px-8 pb-8 text-slate-500 font-medium italic border-t border-slate-50 pt-6 leading-relaxed">"{faq.a}"</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="py-20 bg-white border-t border-slate-100 text-center">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10 opacity-50">
-          <span className="font-bold tracking-[0.3em] uppercase text-xs">Nguyễn Nam BĐS</span>
-          <p className="text-[10px] font-bold uppercase tracking-widest">© 2026 Nguyễn Nam BĐS. Bảo lưu mọi quyền.</p>
+      <footer className="bg-slate-900 text-slate-400 py-12 text-center border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-6">
+          <div className="flex items-center gap-4">
+            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-gold hover:text-white transition-all">
+              <Facebook className="w-5 h-5" />
+            </a>
+            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-gold hover:text-white transition-all">
+              <Youtube className="w-5 h-5" />
+            </a>
+            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-gold hover:text-white transition-all">
+              <TikTokIcon />
+            </a>
+          </div>
+          <p className="text-sm">© {new Date().getFullYear()} Nguyễn Nam BĐS. All rights reserved.</p>
         </div>
       </footer>
     </div>
